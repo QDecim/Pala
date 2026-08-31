@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Захисник — гайд Protection Paladin (WotLK)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12141c;
+    --bg-2: #0d0f16;
+    --panel: #1a1d28;
+    --panel-2: #20242f;
+    --border: #33394a;
+    --border-soft: #262b39;
+    --gold: #c9a24b;
+    --gold-light: #e8cf8f;
+    --gold-dim: #7c6531;
+    --text: #e7e4da;
+    --text-dim: #9aa0b0;
+    --text-faint: #626a7c;
+    --blue: #7fb2d8;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,162,75,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--gold-dim); color:var(--bg); }
+
+  h1,h2,h3{
+    font-family:'Cinzel', serif;
+    font-weight:600;
+    letter-spacing:0.02em;
+    margin:0;
+    color:var(--gold-light);
+  }
+
+  a{ color:var(--blue); }
+
+  img{ max-width:100%; display:block; }
+  video{ max-width:100%; display:block; }
+
+  /* ---------- Header ---------- */
+  header.hero{
+    padding: 56px 24px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--border-soft);
+    background: linear-gradient(180deg, rgba(201,162,75,0.06), transparent 70%);
+    position:relative;
+  }
+  .emblem{
+    width:64px; height:64px;
+    margin:0 auto 18px;
+    animation: emblem-glow 2.4s ease-out 0.2s both;
+  }
+  @keyframes emblem-glow{
+    0%{ filter:drop-shadow(0 0 0 rgba(201,162,75,0)); opacity:0; transform:scale(0.9);}
+    40%{ filter:drop-shadow(0 0 14px rgba(201,162,75,0.65)); opacity:1; transform:scale(1.03);}
+    100%{ filter:drop-shadow(0 0 0 rgba(201,162,75,0)); opacity:1; transform:scale(1);}
+  }
+  header.hero h1{ font-size: clamp(28px, 4vw, 42px); text-transform:uppercase; }
+  header.hero p.tagline{ margin-top:10px; color:var(--text-dim); font-size:15px; letter-spacing:0.01em; }
+  header.hero p.tagline .divider{ color:var(--gold-dim); margin:0 8px; }
+
+  /* ---------- Tabs nav ---------- */
+  nav.tabs{
+    position:sticky; top:0; z-index:20;
+    display:flex; gap:2px; overflow-x:auto;
+    background:var(--bg-2);
+    border-bottom:1px solid var(--border);
+    padding:0 16px;
+    scrollbar-width:thin;
+  }
+  nav.tabs::-webkit-scrollbar{ height:4px; }
+  nav.tabs::-webkit-scrollbar-thumb{ background:var(--border); }
+  nav.tabs button{
+    flex:0 0 auto; background:none; border:none;
+    color:var(--text-faint);
+    font-family:'Inter', sans-serif; font-size:14px; font-weight:600;
+    padding:16px 18px 13px; cursor:pointer; position:relative;
+    white-space:nowrap; transition:color 0.15s ease;
+  }
+  nav.tabs button:hover{ color:var(--text-dim); }
+  nav.tabs button.active{ color:var(--gold-light); }
+  nav.tabs button.active::after{
+    content:""; position:absolute; left:14px; right:14px; bottom:0; height:2px;
+    background:var(--gold); box-shadow:0 0 8px rgba(201,162,75,0.7);
+  }
+
+  /* ---------- Main content ---------- */
+  main{ max-width:1080px; margin:0 auto; padding:40px 24px 100px; }
+
+  section.panel{ display:none; animation:fade-in 0.25s ease; }
+  section.panel.active{ display:block; }
+  @keyframes fade-in{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:translateY(0);} }
+
+  .panel-head{ margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid var(--border-soft); }
+  .panel-head h2{ font-size:26px; }
+  .panel-head p{ margin-top:8px; color:var(--text-dim); font-size:15px; max-width:640px; }
+  .edit-note{
+    display:inline-block; margin-top:12px; font-size:12.5px; color:var(--text-faint);
+    font-style:italic; border-left:2px solid var(--border); padding-left:10px;
+  }
+
+  /* ---------- Row: image + comment (2 columns) ---------- */
+  .row{
+    display:grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap:22px;
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    padding:20px;
+    margin-bottom:20px;
+  }
+  .img-slot{
+    min-height:220px; border:1px dashed var(--border); background:var(--panel-2);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; color:var(--text-faint); font-size:13px; padding:16px; text-align:center;
+    overflow:hidden;
+  }
+  .img-slot svg{ width:34px; height:34px; opacity:0.5; }
+  .img-slot img{ width:100%; height:100%; object-fit:contain; }
+
+  .comment{ display:flex; flex-direction:column; justify-content:center; }
+  .comment .row-title{
+    font-family:'Cinzel', serif; font-size:15px; color:var(--gold-light);
+    margin-bottom:8px; letter-spacing:0.01em;
+  }
+  .comment p{ margin:0; color:var(--text-dim); font-size:14.5px; }
+  .comment p.placeholder{ color:var(--text-faint); font-style:italic; }
+
+  /* модифікатор для широких/низьких скріншотів — картинка на всю ширину, коментар під нею */
+  .row.wide{
+    grid-template-columns:1fr;
+  }
+  .row.wide .img-slot{
+    min-height:auto;
+  }
+  .row.wide .img-slot img{
+    width:100%;
+    height:auto;
+    object-fit:initial;
+  }
+
+  @media (max-width: 720px){
+    .row{ grid-template-columns:1fr; }
+    .img-slot{ min-height:160px; }
+  }
+
+  .macro-box textarea{
+  width:100%;
+  min-height:100px;
+  background:#0d0f16;
+  color:#e8cf8f;
+  border:1px solid #33394a;
+  padding:12px;
+  font-family:monospace;
+  font-size:13.5px;
+  line-height:1.5;
+  resize:vertical;
+}
+
+  /* ---------- Stack card: single column (для Білдів) ---------- */
+  .stack-card{
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    padding:20px;
+    margin-bottom:20px;
+  }
+  .stack-card .img-slot{ min-height:auto; margin-bottom:16px; border-style:solid; }
+  .stack-card .row-title{
+    font-family:'Cinzel', serif; font-size:16px; color:var(--gold-light);
+    margin-bottom:8px; letter-spacing:0.01em;
+  }
+  .stack-card p{ margin:0; color:var(--text-dim); font-size:14.5px; }
+  .stack-card p.placeholder{ color:var(--text-faint); font-style:italic; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    text-align:center; padding:30px 24px 50px; color:var(--text-faint);
+    font-size:12.5px; border-top:1px solid var(--border-soft);
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="emblem" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 4 L56 12 V30 C56 46 46 56 32 60 C18 56 8 46 8 30 V12 Z" stroke="#c9a24b" stroke-width="2" fill="#1a1d28"/>
+    <path d="M32 16 V48 M20 32 H44" stroke="#e8cf8f" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+  <h1>Захисник</h1>
+  <p class="tagline">Гайд по Protection Paladin<span class="divider">·</span>Wrath of the Lich King</p>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="builds">Білди</button>
+  <button data-tab="rotation">Ротація</button>
+  <button data-tab="caps">Капи</button>
+  <button data-tab="enchants">Зачарування</button>
+  <button data-tab="gems">Каміння</button>
+  <button data-tab="glyphs">Символи</button>
+  <button data-tab="macros">Макроси</button>
+  <button data-tab="firstraids">Гір на перші рейди</button>
+  <button data-tab="gear">Рекомендації по шмоту</button>
+</nav>
+
+<main>
+
+  <!-- БІЛДИ (одна колонка) -->
+  <section class="panel active" id="builds">
+    <div class="panel-head">
+      <h2>Білди</h2>
+      <p>Основні варіанти розстановки талантів для танкування.</p>
+    </div>
+
+    <div class="stack-card">
+      <div class="row-title">Основний кістяк білду</div>
+      <div class="img-slot"><img src="bilds/base_bild.png" alt="Базовий білд" loading="lazy"></div>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild1.png" alt="Білд — варіант 1" loading="lazy"></div>
+      <div class="row-title">Варіант 1 - Ви ще не танчите цлк, кд станів вам не треба</div>
+      <p class="placeholder">Захіл по вам збільшено, хіли скажуть дякую <br>
+      <br>Під ппг також прекрасно підійде
+      <br>
+      Можна також вкинутись замість кріта в 4/5 Печать безупречности гілки "Свет"</p>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild2.png" alt="Білд — варіант 2" loading="lazy"></div>
+      <div class="row-title">Варіант 2 - Класична розкладка</div>
+      <p class="placeholder">
+        - кріт <br>
+        + дамаг від печатки мщения/порчи <br>
+        <br>
+        Також підходить під ппг, можна танчити ІК
+      </p>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild3.png" alt="Білд — варіант 3" loading="lazy"></div>
+      <div class="row-title">Варіант 3 - Ви вже йдете в цлк</div>
+      <p class="placeholder">Ви чудово знаєте, що шмот ще умовно ніякий, але захілу вам ну дуже хочеться</p>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild4.png" alt="Білд — варіант 4" loading="lazy"></div>
+      <div class="row-title">Варіант 4 - Якщо ви знаєте, що йдете в ЦЛК ХМ і не будете танчити Сіндру </div> 
+      <p class="placeholder">(ну або у вас є шмот із хардкапом мастерства)</p>
+    </div>
+
+    <div class="stack-card"> Подальші таланти для подумати, обирайте собі свій самі :)</div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild5.png" alt="Білд — варіант 5" loading="lazy"></div>
+      <div class="row-title">Варіант 5 - Ви вже ходите активно в ЦЛК і почали ходити в ХМки</div>
+      <p class="placeholder"> - КД стану з молотка 30 секунд</p>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild6.png" alt="Білд — варіант 6" loading="lazy"></div>
+      <div class="row-title">Варіант 6</div>
+      <p class="placeholder">
+      Можна вкинути в печатку, якщо хочете<br>
+      <br>
+      Різниця:<br>
+      <br>
+      1% по гуманоїдам, демонам, нежиті, елементалях<br>
+      <br>
+      3% ефективності печаті мщения/порчи        
+      </p>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild7.png" alt="Білд — варіант 7" loading="lazy"></div>
+      <div class="row-title">Варіант 7</div>
+      <p class="placeholder">
+        Зустрічається наступний варіант, аргументуючи тим, що у вас в рейді є ретрік<br>
+        Але у ретріка також вкачані кулаки, а вам то воно нащо, вар і на ап покричить, йому також хочеться дамагу<br>
+        <br>
+        знову таки куди вкинути останній талант вирішіть самі...</p>
+    </div>
+
+    <div class="stack-card">
+      <div class="img-slot"><img src="bilds/bild8.png" alt="Білд — варіант 8" loading="lazy"></div>
+      <div class="row-title">Варіант 8</div>
+      <p class="placeholder">
+        Скоріш із рубрики "ШКІДЛИВІ ПОРАДИ" <br>
+        Ви в рейді навряд просядете по мані, щоб вкинути таланти в перший тір
+    </p>
+    </div>
+  </section>
+
+  <!-- РОТАЦІЯ -->
+  <section class="panel" id="rotation">
+    <div class="panel-head">
+      <h2>Ротація</h2>
+      <span class="edit-note">Пріоритет умінь у вас відсутній, дивіться по ситуації :)</span>
+    </div>
+
+    <div class="row wide">
+      <div class="img-slot"><img src="fight/rotation.png" alt="Ротація" loading="lazy"></div>
+      <div class="comment">
+        <div class="row-title">По факту вона зводиться до патерну 8-6-8-6-8 або 8-6-9-6-8, хто як качався</div>
+        <p class="placeholder">
+        <br>
+          <b><u>Не забувайте з пула давати по собі:</u></b><br>
+        <br>
+          <b>Великое благословение неприкосновенности</b> <br>
+          (баф зі щитком, це ваша мана за кожен пейр, блок або уклон)<br>
+        <br>
+          <b>Святую клятву</b> <br>
+          (щоб мана не закінчувалась, кожен ваш удар зблизька чи правосуддям поновлює його дію) <br>
+          (але не бонус т10, майте на увазі)<br>
+        <br>
+          <b>Священный щит</b> <br>
+          (який треба підтримувати на собі, не дрочіть хпала)<br>
+        </p>
+      </div>
+    </div>
+
+    <div class="row wide">
+      <div class="img-slot">
+        <video src="fight/preview.mov" controls preload="metadata"></video>
+      </div>
+      <div class="comment">
+        <div class="row-title">Відео-приклад ротації (для самих лінивих, хоча я не рекомендую)</div>
+        <p class="placeholder"> Ваш геймплей перетвориться в ось це, моє діло надати :) </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- КАПИ -->
+  <section class="panel" id="caps">
+    <div class="panel-head">
+      <h2>Капи</h2>
+    </div>
+
+    <div class="row">
+      <div class="img-slot" style="margin: auto;">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="caps/stats.png" alt="Капи" loading="lazy">
+      </div>
+      <div class="comment">
+        <div class="row-title">
+          Стандартні у всіх класів ближнього бою: <br>
+        <br>
+          8% меткости <br>
+          26 мастерства <br> (16 + бонус від символу при активній Печать порчи / мщения)<br>
+        <hr>
+          Оскільки ви танк, необхідно зібрати хоча б мін.кап дефа задля запобігання крітування босом:<br>
+        <br>
+          Защита: 540+<br>
+          Броня: чим більше - тим краще, <b>прагнемо збирати 70+%</b><br>
+        <hr>
+          Для драконів:<br>
+        <br>
+          Защита: 560+ <br>
+          Мастерство: 56 (~335 одиниць при наведенні)<br>
+        <br>
+          Броня: чим більше - тим краще, тому діставайте свій шмот з армором<br>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- ЗАЧАРУВАННЯ -->
+  <section class="panel" id="enchants">
+    <div class="panel-head">
+      <h2>Зачарування</h2>
+      <p>Рекомендовані зачарування для кожного слоту екіпіровки.</p>
+    </div>
+
+    <div class="row wide">
+      <div class="img-slot"><img src="enchant/head.png" alt="Шолом" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Шолом</div><p class="placeholder">Основний ваш варіант, якщо хочете ще додати собі резистів, то йдіть до фракцій шукайте правильний</p></div>
+    </div>
+
+    <div class="row wide">
+      <div class="img-slot"><img src="enchant/shoulders_1.png" alt="Плечі — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Плечі — варіант 1</div><p class="placeholder">Так, це PvP-чант, але він дає нам стаміни, якщо у вас вже достатньо дефа, то має сенс обрати його :)</p></div>
+    </div>
+
+    <div class="row wide">
+      <div class="img-slot"><img src="enchant/shoulders_2.png" alt="Плечі — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Плечі — варіант 2</div><p class="placeholder">Ваш відповідний варіант, якщо дефа ще недостатньо. <br> Якщо маєте прокачане Начертание: Мастерское начертание вершины</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/cloak.png" alt="Плащ" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Плащ</div><p class="placeholder">Більше армора богу армора. <br> З варіантів на тему можете також обирати: <br> Портняжное дело: Вышивка в виде рукояти меча(прок 400 сили атаки) <br> Інчант: Скорость ІІ (23 швидкості), Ловкость V (22 спритності), Ткань титанов (16 дефа) або будь-які спротиви, які вам потрібні.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/chest_1.png" alt="Груди — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Груди — варіант 1</div><p class="placeholder">Я обираю цей. Приємний бонус у вигляді +10 до всіх характеристик.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/chest_2.png" alt="Груди — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Груди — варіант 2</div><p class="placeholder">Оскільки у ЦЛК кількість вашого здоров'я збільшується завдяки бафу, можна взяти, хоча здебільшого це вибір ДК.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/wrist_1.png" alt="Наручі — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Наручі — варіант 1</div><p class="placeholder">Стабільний приріст здоров'я, нічого не треба добивати? Більше стаміни богу стаміни!</p></div>
+    </div>
+    
+    <div class="row">
+      <div class="img-slot"><img src="enchant/wrist_2.png" alt="Наручі — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Наручі — варіант 2</div><p class="placeholder">Не вистачає Мастерства? Ваш вибір :)</p></div>
+    </div>
+    
+    <div class="row">
+      <div class="img-slot"><img src="enchant/strap.png" alt="Strap" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Пояс</div><p class="placeholder"> Тут варіантів не передбачено Blizzard :) </p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/hands_1.png" alt="Рукавиці — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Рукавиці — варіант 1</div><p class="placeholder">Маєте Інженерку? Більше броні богу броні!</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/hands_2.png" alt="Рукавиці — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Рукавиці — варіант 2</div><p class="placeholder">Не маєте Інженерки? Agro вам завжди знадобиться, парирування це приємно.</p></div>
+    </div>
+
+    <div class="row ">
+      <div class="img-slot"><img src="enchant/pants.png" alt="Штани" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Штани</div><p class="placeholder">Blizzard нічого краще не придумав :) <br> Та й не треба :D</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/foot_1.png" alt="Взуття — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Взуття — варіант 1</div><p class="placeholder">Маєте Інженерку? Ваш шанс увірватись до боса раніше, ніж добіжить пет ханта :D</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/foot_2.png" alt="Взуття — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Взуття — варіант 2</div><p class="placeholder">Не маєте Інженерки? Cтаміна завжди корисна. Бонус до пересування не сумується з талантом. <br>Тому якщо не качали [Погоня за справедливостью], ось вам заміна. </p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/weapon_1.png" alt="Зброя — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Зброя — варіант 1</div><p class="placeholder">Якщо на вашому сервері добре працює прок цього зачарування, рекомендую брати.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/weapon_2.png" alt="Зброя — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Зброя — варіант 2</div><p class="placeholder">Якщо прок відведення удару працює як ви після нового року, рекомендую взяти Мангуста.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/weapon_3.png" alt="Зброя — варіант 3" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Зброя — варіант 3</div><p class="placeholder">Якщо у вашій гільдії бідні / ліниві чантери, обирайте найпростіший варіант - Силу атаки. </p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/weapon_4.png" alt="Зброя — варіант 4" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Зброя — варіант 4</div><p class="placeholder">Якщо ви не можете добрати кап вашого хіта, можете також обрати цей чант :)</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/shield_1.png" alt="Щит — варіант 1" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Щит — варіант 1</div><p class="placeholder">Перший найдешевший варіант, який можете обрати. Особливо у випадку, якщо капа дефа все ще немає.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/shield_2.png" alt="Щит — варіант 2" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Щит — варіант 2</div><p class="placeholder">Другий найдешевший варіант, оскільки більше стаміни богу стаміни.</p></div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot"><img src="enchant/shield_3.png" alt="Щит — варіант 3" loading="lazy"></div>
+      <div class="comment"><div class="row-title">Щит — варіант 3</div><p class="placeholder">Ваш перманентний вибір. Вам треба блок щитом. Не дивіться на PvP бонус, паладін не ведмідь чи ДК, він щит носить. А луплять ваш, здебільшого, саме в щит.</p></div>
+    </div>
+
+  </section>
+
+  <!-- КАМІННЯ -->
+  <section class="panel" id="gems">
+    <div class="panel-head">
+      <h2>Каміння</h2>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/meta.png" alt="Meta-сокет" loading="lazy">
+
+      </div>
+      <div class="comment">
+        <div class="row-title">Meta-сокет</div>
+        <p class="placeholder">Другий варіант - "Алмаз строгого землеправителя" <br>
+        +32 выносливости и увеличение показателя брони от носимой экипировки на 2%</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/red.png" alt="Червоний сокет" loading="lazy">
+      </div>
+
+      <div class="comment">
+        <div class="row-title">Червоний слот</div>
+        <p class="placeholder">
+          +20 мастерства - "Ясный багровый рубин" <br>
+          +20 уклонения - "Изящный багровый рубин"
+        </p>
+      
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/blue.png" alt="Синій сокет" loading="lazy">
+      </div>
+
+      <div class="comment">
+        <div class="row-title">Синій слот</div>
+        <p class="placeholder">
+          +30 выносливости - "Цельный величественный циркон" 
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/yellow.png" alt="Жовтий сокет" loading="lazy">
+      </div>
+
+      <div class="comment">
+        <div class="row-title">Жовтий слот</div>
+        <p class="placeholder">
+          +20 защиты - "Матовый царский янтарь"
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/orange.png" alt="Червоний / жовтий сокет" loading="lazy">
+      </div>
+
+      <div class="comment">
+        <div class="row-title">Червоний/жовтий слот</div>
+        <p class="placeholder">
+          +10 мастерства +10 защиты - "Затвердевший аметрин" <br>
+          +10 парирования +10 защиты - "Мерцающий аметрин" <br>
+          +10 уклонения +10 защиты - "Стойкий аметрин"
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/green.png" alt="Синій / жовтий сокет" loading="lazy">
+      </div>
+
+      <div class="comment">
+        <div class="row-title">Синій / жовтий слот</div>
+        <p class="placeholder">
+          +10 защиты +15 выносливости - "Отверделое Око Зула" <br>
+          +10 к рейтингу меткости +15 выносливости - "Насыщенное Око Зула
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <!-- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> -->
+        <img src="gems/magenta.png" alt="Червоний / синій сокет" loading="lazy">
+      </div>
+
+      <div class="comment">
+        <div class="row-title">Червоний / синій слот</div>
+        <p class="placeholder">
+          +10 парирования +15 выносливости - "Страхолит защитника"<br>
+          +10 мастерства +15 выносливости - "Страхолит стража"<br>
+          +10 уклонения +15 выносливости - "Монарший страхолит"
+        </p>
+      </div>
+    </div>
+
+    <div class="row wide">
+      <p style="text-align: center; text-decoration: solid;">Якщо якийсь зі статів вам вже не актуальний, ставим не по кольору: <br>
+    +30 выносливости "Цельный величественный циркон"</p>
+    </div>
+      
+    
+  </section>
+
+  <!-- СИМВОЛИ -->
+  <section class="panel" id="glyphs">
+    <div class="panel-head">
+      <h2>Символи</h2>
+    </div>
+
+    <div class="row wide">
+      <div class="comment">
+        <div class="row-title" style="text-align: center; font-size: 18px;">Мастхев набір, решту обирайте по ситуації</div>
+      </div>
+      <div class="img-slot"><img src="glyphs/glyphs.png" alt="Огляд великих символів" loading="lazy"></div>
+    </div>
+
+    <div class="row wide">
+      <div class="comment">
+        <div class="row-title" style="text-align: center; font-size: 18px;">Великі символи</div>
+      </div>
+
+      <div class="comment"><div class="row-title">Варіант 1</div><p class="placeholder">На початку вам, можливо, буде не вистачати ще однієї прожимки. <br> Також можна брати під РС для Халіона (особливо ХМ-режим)</p></div>
+      <div class="img-slot"><img src="glyphs/glyph_1.png" alt="Варіант " loading="lazy"></div>
+
+      <div class="comment"><div class="row-title">Варіант 2 - РЕКОМЕНДУЮ</div><p class="placeholder">Корисно тільки в ЦЛК чи Наксрамасі. На шаркарях скажете дякую.</p></div>
+      <div class="img-slot"><img src="glyphs/glyph_2.png" alt="Варіант " loading="lazy"></div>
+
+      <div class="comment"><div class="row-title">Варіант 3 - РЕКОМЕНДУЮ</div><p class="placeholder">Якщо у вас постійно місує таунт, а "з руки" агро поки не перехоплюється. <br>Також буває корисно, коли на вашому сервері параметр Меткость веде себе дуже дивно. </p></div>
+      <div class="img-slot"><img src="glyphs/glyph_3.png" alt="Варіант " loading="lazy"></div>
+
+      <div class="comment"><div class="row-title">Варіант 4</div><p class="placeholder">Халявний зріз 3% шкоди по вас, що діють постійно.</p></div>
+      <div class="img-slot"><img src="glyphs/glyph_4.png" alt="Варіант " loading="lazy"></div>
+    </div>
+
+    <div class="row wide">
+      <div class="comment">
+        <div class="row-title" style="text-align: center; font-size: 18px;">Малі символи</div>
+      </div>
+      <div class="img-slot"><img src="glyphs/small_glyphs.png" alt="Малі символи" loading="lazy"></div>
+      <div class="comment"><p class="placeholder" style="text-align: center;">Фактично не сильно важливо, що ви оберете малим символом, можете бігати взагалі без нього </p></div>
+    </div>
+  </section>
+
+  <!-- МАКРОСИ -->
+  <section class="panel" id="macros">
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip
+/cast Священная жертва
+/cancelaura Священная жертва</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Массакра</div>
+            <p class="placeholder">Це прожимка скоріш в моменті. За командою РЛа часто треба просейвить саме моментну механіку. Першим натиском активуєте 2 бафи (по області в 30 м навколо вас: передача 30% отримуваної шкоди рейду на вас та -20% дамагу), другим натиском знімаєте з себе баф, який передає дамаг з рейду на вас. Сейв на 6 секунд :)</p>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip Божественный щит
+/cast Божественный щит
+/cancelaura Божественный щит</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Бабл / відміна баблу</div>
+            <p class="placeholder">Скидалка всякої фігні: стаки на Гниломорді тощо.</p>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip
+/cast Священная жертва
+/cancelaura Священная жертва</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Массакра</div>
+            <p class="placeholder">Опис, коли використовувати цей макрос...</p>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip
+/cast [target=focus] Длань спасения</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Сальва по фокусу</div>
+            <p class="placeholder">Повірте, знайдете такого, хто буде зривати з вас боса.</p>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip
+/cast [target=mouseover] Очищение</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Діспел по наведенню миші</div>
+            <p class="placeholder">Діспельте людей без кліку. Також, якщо наводитесь на моба, то діспелите себе.</p>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip
+/castsequence Щит праведности, Молот праведника</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Черга спелів з кд 6</div>
+            <p class="placeholder">Вас ніхто не засуджує. Поки що...<br>(Дивись розділ "Ротація")</p>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="macro-box">
+        <textarea readonly>#showtooltip
+/castsequence Щит небес, Правосудие мудрости, Освящение</textarea>
+          </div>
+          <div class="comment">
+            <div class="row-title">Черга спелів з кд 8</div>
+            <p class="placeholder">Вас ніхто не засуджує. Поки що...<br>(Дивись розділ "Ротація")</p>
+        </div>
+    </div>
+  </section>
+
+  <!-- ГІР НА ПЕРШІ РЕЙДИ -->
+  <section class="panel" id="firstraids">
+    <div class="panel-head">
+      <h2>Гір на перші рейди</h2>
+      <p>Стартовий сет екіпіровки для входу в перші рейди.</p>
+      <span class="edit-note">Папка (за зразком): firstraids/ — додай свої скріншоти й онови src нижче</span>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        Скріншот стартового сету
+      </div>
+      <div class="comment">
+        <div class="row-title">Мінімальний поріг для рейдів</div>
+        <p class="placeholder">Список предметів, джерела (підземелля/PvP/крафт)...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- РЕКОМЕНДАЦІЇ ПО ШМОТУ -->
+  <section class="panel" id="gear">
+    <div class="panel-head">
+      <h2>Рекомендації по шмоту</h2>
+      <p>Пріоритетні предмети екіпіровки по слотах для прогресу далі по рейдах.</p>
+      <span class="edit-note">Папка (за зразком): gear/ — додай свої скріншоти й онови src нижче</span>
+    </div>
+
+    <div class="row">
+      <div class="img-slot">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        Скріншот шмоту
+      </div>
+      <div class="comment">
+        <div class="row-title">BiS / пріоритетні предмети</div>
+        <p class="placeholder">Список по слотах, джерело дропу...</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Експериментуйте, грайте та отримуйте задоволення :)
+</footer>
+
+<script>
+  const buttons = document.querySelectorAll('nav.tabs button');
+  const panels = document.querySelectorAll('section.panel');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
